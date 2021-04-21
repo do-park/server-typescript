@@ -13,6 +13,6 @@ router.post('/login', function (req, res) {
         res.send(email.toUpperCase());
     }
     else {
-        res.send('You must provide an email property');
+        res.send('You must provide an email');
     }
 });
