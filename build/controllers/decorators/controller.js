@@ -9,6 +9,10 @@ exports.controller = void 0;
 require("reflect-metadata");
 var AppRouter_1 = require("../../AppRouter");
 var MetadataKeys_1 = require("./MetadataKeys");
+function bodyValidator(keys) {
+    return function (req, res, next) {
+    };
+}
 function controller(routerPrefix) {
     return function (target) {
         var router = AppRouter_1.AppRouter.getInstance();
