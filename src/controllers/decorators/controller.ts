@@ -6,8 +6,20 @@ import { Methods } from './Method';
 
 function bodyValidator(keys: string): RequestHandler {
   return function (req: Request, res: Response, next: NextFunction) {
+    if (!req.body) {
+      res.status(422).send('Invalid request');
+      return;
+    }
 
-  }
+    for (let key of keys) {
+      if (req.body[key]) {
+        res.status(422).send('Invalid request');
+        return;
+      }
+    }
+
+    next();
+  };
 }
 
 export function controller(routerPrefix: string) {
@@ -31,8 +43,19 @@ export function controller(routerPrefix: string) {
         Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key)
         || [];
 
+      const requiredBodyProps =
+        Reflect.getMetadata(MetadataKeys.validator, target.prototype, key)
+        || [];
+
+      const validator = bodyValidator(requiredBodyProps);
+
       if (path) {
-        router[method](`${routerPrefix}${path}`, ...middlewares, routeHandler);
+        router[method](
+          `${routerPrefix}${path}`,
+          ...middlewares,
+          validator,
+          routeHandler
+        );
       }
     }
   };
