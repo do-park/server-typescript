@@ -20,7 +20,9 @@ export function controller(routerPrefix: string) {
         key
       );
 
-      const middlewares = Reflect.getMetadata(MetadataKeys.middleware, target, key);
+      const middlewares =
+        Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key)
+        || [];
 
       if (path) {
         router[method](`${routerPrefix}${path}`, ...middlewares, routeHandler);
